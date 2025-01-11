@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://caeur4ndiia1m"]
+
+[ext_resource type="PackedScene" uid="uid://uh4jswc6wpg4" path="res://scenes/game_objects/board_body/board.tscn" id="1_57l0e"]
+[ext_resource type="Script" path="res://scenes/game_objects/basket_body/basket.gd" id="1_jm55n"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uv4d4"]
+size = Vector2(150, 53)
+
+[node name="Basket" type="Area2D"]
+collision_layer = 0
+script = ExtResource("1_jm55n")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-5, -62.5)
+shape = SubResource("RectangleShape2D_uv4d4")
+
+[node name="Board" parent="." instance=ExtResource("1_57l0e")]
+
+[node name="Board4" parent="." instance=ExtResource("1_57l0e")]
+position = Vector2(131, -72)
+rotation = 2.21657
+scale = Vector2(0.75, 0.75)
+
+[node name="Board3" parent="." instance=ExtResource("1_57l0e")]
+position = Vector2(-150, -58)
+rotation = 0.664675
+scale = Vector2(0.75, 0.75)
