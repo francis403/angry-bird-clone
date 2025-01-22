@@ -1,0 +1,48 @@
+[gd_scene load_steps=7 format=3 uid="uid://06qmp005lv5x"]
+
+[ext_resource type="Script" path="res://scenes/levels/base_level/base_level.gd" id="1_qqlrj"]
+[ext_resource type="AudioStream" uid="uid://bs5vu3jw8k1q2" path="res://assets/audio/vanish.wav" id="2_jl2th"]
+[ext_resource type="Texture2D" uid="uid://y287dy5fubx4" path="res://assets/scene/colored_castle.png" id="3_xnppm"]
+[ext_resource type="PackedScene" uid="uid://1v5rja7xj4yx" path="res://scenes/game_objects/counter_label/counter_label.tscn" id="4_gu3gu"]
+[ext_resource type="PackedScene" uid="uid://cyiqqd6udn837" path="res://scenes/game_objects/water/water.tscn" id="6_5kfam"]
+[ext_resource type="PackedScene" uid="uid://cpi1rjct6xql0" path="res://scenes/components/score_component/score_component.tscn" id="6_vk45j"]
+
+[node name="BaseLevel" type="Node2D"]
+script = ExtResource("1_qqlrj")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_jl2th")
+
+[node name="ScoreComponent" parent="." instance=ExtResource("6_vk45j")]
+
+[node name="Background" type="Sprite2D" parent="."]
+position = Vector2(-7, 43)
+scale = Vector2(1.7, 1.7)
+texture = ExtResource("3_xnppm")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+offset_left = -846.0
+offset_top = -459.0
+offset_right = -806.0
+offset_bottom = -419.0
+theme_override_constants/separation = 50
+
+[node name="AttemptsCounterLabel" parent="VBoxContainer" instance=ExtResource("4_gu3gu")]
+layout_mode = 2
+size_flags_vertical = 3
+pre_text_string = "Attempts: "
+
+[node name="PointsCounterLabel" parent="VBoxContainer" instance=ExtResource("4_gu3gu")]
+layout_mode = 2
+signal_to_connect = 2
+pre_text_string = "Points: "
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="AnimalStartMarker" type="Marker2D" parent="."]
+position = Vector2(-596, -145)
+
+[node name="Water" parent="." instance=ExtResource("6_5kfam")]
+position = Vector2(28, 421)
+scale = Vector2(1.5, 1)
+collision_layer = 1

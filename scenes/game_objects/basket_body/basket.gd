@@ -12,6 +12,9 @@ func _ready() -> void:
 	self.body_exited.connect(on_body_exited_signal)
 	PlayerSignals.player_stopped.connect(on_player_stopped_signal)
 	
+func die():
+	self.queue_free()
+	
 func on_body_entered_signal(body: Node2D):
 	print(on_body_entered_signal)
 	if body is Player:

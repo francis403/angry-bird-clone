@@ -8,11 +8,22 @@ class_name LevelPicker
 @export var level_title_string: String = ""
 @export var destination_level: PackedScene
 
+
 func _ready() -> void:
-	panel_container.mouse_entered.connect(on_hover_signal)
-	panel_container.gui_input.connect(on_gui_input_signal)
+	if panel_container != null:
+		panel_container.mouse_entered.connect(on_hover_signal)
+		panel_container.gui_input.connect(on_gui_input_signal)
+
+		#panel_container.add_theme_color_override("bg_color", Color.GREEN)
 	if level_title_string != "":
 		level_title.text = level_title_string
+
+
+func set_level_completed():
+	var styleBox: StyleBoxFlat = panel_container.get_theme_stylebox("panel")
+	styleBox.set("bg_color", Color.GREEN)
+	panel_container.add_theme_stylebox_override("panel", styleBox)
+
 
 func on_hover_signal():
 	animation_player.play("hover")
@@ -25,3 +36,6 @@ func on_gui_input_signal(event: InputEvent):
 		return
 	if destination_level != null:
 		get_tree().change_scene_to_packed(destination_level)
+
+func on_level_finished_successfully():
+	print("test")

@@ -1,6 +1,22 @@
-[gd_scene load_steps=5 format=3 uid="uid://bslehut6hnwkf"]
+[gd_scene load_steps=6 format=3 uid="uid://bslehut6hnwkf"]
 
-[ext_resource type="Script" path="res://level_picker.gd" id="1_d64yn"]
+[ext_resource type="Script" path="res://scenes/UI/level_picker/level_picker.gd" id="1_d64yn"]
+[ext_resource type="PackedScene" path="res://scenes/levels/level1/level_1.tscn" id="2_ollcf"]
+
+[sub_resource type="Animation" id="Animation_a2doa"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PanelContainer:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
 
 [sub_resource type="Animation" id="Animation_2vd2u"]
 resource_name = "hover"
@@ -18,33 +34,19 @@ tracks/0/keys = {
 "values": [0.0, 0.174533, -0.174533, 0.0]
 }
 
-[sub_resource type="Animation" id="Animation_a2doa"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("PanelContainer:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.0]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_j3b88"]
 _data = {
 "RESET": SubResource("Animation_a2doa"),
 "hover": SubResource("Animation_2vd2u")
 }
 
-[node name="LevelPicker" type="Control"]
+[node name="LevelPicker" type="Control" groups=["level_group"]]
 layout_mode = 3
 anchors_preset = 0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("1_d64yn")
+destination_level = ExtResource("2_ollcf")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 custom_minimum_size = Vector2(75, 75)

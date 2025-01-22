@@ -1,40 +1,36 @@
 extends RigidBody2D
 class_name Player
 
+@onready var catapult_audio_stream_player: AudioStreamPlayer = $CatapultAudioStreamPlayer
 @onready var audio_stream_player: AudioStreamPlayer = $AudioStreamPlayer
 @onready var visible_on_screen_notifier_2d: VisibleOnScreenNotifier2D = $VisibleOnScreenNotifier2D
 @onready var collision_shape_2d: CollisionShape2D = $CollisionShape2D
 @onready var state_label: Label = $StateLabel
 @onready var arrow: Sprite2D = $Arrow
+@onready var hitting_wood_audio_stream_player: AudioStreamPlayer = $HittingWoodAudioStreamPlayer
 
 enum PLAYER_STATE {REST, ACTIVE, DRAGGING}
 
 var initial_position: Vector2
 var final_position: Vector2
-var has_been_lauched: bool
 var _state: PLAYER_STATE
-
-var main_menu = preload("res://scenes/UI/level_picker/level_picker.tscn")
-
+var last_collision_count
 
 func _ready() -> void:
+	self.sleeping_state_changed.connect(on_sleeping_state_changed)
+	self.body_entered.connect(on_body_entered_signal)
 	visible_on_screen_notifier_2d.screen_exited.connect(on_screen_exited_signal)
 	_state = PLAYER_STATE.REST
-	has_been_lauched = false
+	last_collision_count = 0
 	arrow.visible = false
 	self.set_process(false)
 
-func _process(delta: float) -> void:
-	if _state == PLAYER_STATE.ACTIVE:
-		var vel_sum = abs(linear_velocity.x) + abs(linear_velocity.y)
-		if vel_sum > Constants.IS_STOPPED_SPEED_VALUE:
-			has_been_lauched = true
-		elif vel_sum < Constants.IS_STOPPED_SPEED_VALUE && has_been_lauched:
-			PlayerSignals.player_stopped.emit()
-			self.set_process(false)
-			_state = PLAYER_STATE.REST
-			set_label_status()
 
+#func _process(delta: float) -> void:
+	#if last_collision_count != get_contact_count()\
+		#and !hitting_wood_audio_stream_player.playing:
+		#last_collision_count = get_contact_count()
+		#hitting_wood_audio_stream_player.play()	
 
 func die():
 	PlayerSignals.player_died.emit()
@@ -43,7 +39,7 @@ func die():
 func _set_rest(freeze_flag: bool = true):
 	if freeze_flag:
 		self.freeze = true
-	#self.set_process(false)
+	self.set_process(false)
 	set_label_status()
 
 func _set_dragging():
@@ -54,7 +50,7 @@ func _set_dragging():
 
 func _set_active():
 	self.freeze = false
-	Callable(self.set_process).call_deferred(true)
+	#Callable(self.set_process).call_deferred(true)
 	_state = PLAYER_STATE.ACTIVE
 	set_label_status()
 	audio_stream_player.stop()
@@ -66,6 +62,11 @@ func set_label_status():
 		state_label.text = PLAYER_STATE.keys()[_state]
 
 # Signals
+
+func on_body_entered_signal(body: Node2D):
+	if !hitting_wood_audio_stream_player.playing:
+		hitting_wood_audio_stream_player.play()
+
 func on_screen_exited_signal():
 	print("self cleaning queue free")
 	die()
@@ -79,6 +80,7 @@ func _input(event: InputEvent) -> void:
 		if event.button_mask == 0:
 			_set_active()
 			apply_drag_push()
+			catapult_audio_stream_player.play()
 		else:
 			update_arrow_sprite()
 
@@ -112,4 +114,19 @@ func update_arrow_sprite():
 	#print("angle: ", angle)
 	if arrow != null:
 		arrow.rotation = arrow_angle
-		arrow.scale = Vector2(arrow_scale, 1)
+		#arrow.scale = Vector2(arrow_scale, 1)
+		
+#SIGNALS#
+func on_sleeping_state_changed():
+	if self.sleeping:
+		#PlayerSignals.player_stopped.emit()
+		var colliding_bodies = get_colliding_bodies()
+		if colliding_bodies.size() > 0:
+			if colliding_bodies[0] is Cup:
+				colliding_bodies[0].die()
+			elif  colliding_bodies[0] is Basket:
+				colliding_bodies[0].get_parent().queue_free()
+		self.set_process(false)
+		_state = PLAYER_STATE.REST
+		set_label_status()
+		die()

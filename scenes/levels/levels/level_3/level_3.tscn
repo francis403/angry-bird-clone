@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://do4renakof1u5"]
+
+[ext_resource type="PackedScene" uid="uid://06qmp005lv5x" path="res://scenes/levels/base_level/base_level.tscn" id="1_wqi3w"]
+[ext_resource type="PackedScene" uid="uid://bpekvis767cxl" path="res://scenes/game_objects/cup/cup.tscn" id="2_fvt4v"]
+[ext_resource type="PackedScene" uid="uid://dntbaxgylvsq3" path="res://scenes/game_objects/stone_body/stone_body.tscn" id="3_al42r"]
+
+[node name="Level" instance=ExtResource("1_wqi3w")]
+
+[node name="Cup" parent="." index="7" instance=ExtResource("2_fvt4v")]
+position = Vector2(280, 76)
+
+[node name="Cup2" parent="." index="8" instance=ExtResource("2_fvt4v")]
+position = Vector2(679, 76)
+
+[node name="StoneBody2" parent="." index="9" instance=ExtResource("3_al42r")]
+position = Vector2(471, -105)
+rotation = 3.14159
